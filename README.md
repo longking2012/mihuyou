@@ -1,5 +1,7 @@
 # 米哈游.com · 抽卡跳转站
 
+[![给我点个 Star 谢谢喵](star.png)](https://github.com/longking2012/mihuyou/stargazers)
+
 > 打开就抽一发，抽到哪张卡，就跳哪个网址。
 
 ## 这是什么
@@ -18,6 +20,11 @@
 米哈游.com/
 ├── index.html          # 主页入口，加载 aha.js
 ├── aha.js              # 反混淆后的工作源码（947 行，可直接阅读/修改）
+├── star.png            # 「求个 Star」引导图
+├── .github/workflows/
+│   └── snapshot.yml    # 每小时云端抓取 aha.js 并归档旧版（GitHub Actions）
+├── baseline/           # 抓取对比基准，由 Actions 自动维护（勿手改）
+├── old/                # aha.js 历史旧版自动存档，由 Actions 生成
 ├── sarach/             # 站内搜索页「感觉都不如原神」
 │   ├── 感觉都不如原神.html
 │   └── 感觉都不如原神_files/
@@ -63,6 +70,16 @@
 1. 把本仓库推到 GitHub（建议仓库名 `mihayo-com`）
 2. 仓库 **Settings → Pages → Source** 选 `main` 分支、根目录 `/`
 3. 稍等片刻，Pages 地址即生效
+
+## 自动归档 aha.js（GitHub Actions）
+
+`.github/workflows/snapshot.yml` 会在 GitHub 云端**每小时**（以及 `aha.js` 一有更新时）自动：
+
+1. 抓取线上 `aha.js`；
+2. 与 `baseline/aha.js`（上次抓到的基准）对比；
+3. 一旦发现变化，就把旧版存到 `old/aha_时间戳.js`，并更新基准与根目录脚本。
+
+全程在 GitHub 服务器上完成，**本地不需要运行任何脚本、不产生任何文件**。也可在仓库 **Actions** 页面手动触发。
 
 ## 版权与所有权
 
