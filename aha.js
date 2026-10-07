@@ -117,7 +117,7 @@ const STANDARD_KEYS = ['FGO国服官网', '站内搜索页']
 
 // 4★ 池：UP 子池（PREFERRED_UP_KEYS）留空 = 本池没有当期 UP，池内等概率
 const PREFERRED_KEYS = ['网友投稿']
-const PREFERRED_UP_KEYS = []
+const PREFERRED_UP_KEYS = ['B站 Longking2012'] // 部署者的 B站主页提权为 4★ UP 子池，确保访客能抽到（3★ 池几乎不会被跳转选中）
 
 // 3★ 狗粮池：UP 子池吃 CONFIG.UP_SHARE，其余按 FILLER_GROUPS 等概率
 const FILLER_UP_KEYS = ['3星狗粮UP']
@@ -183,6 +183,12 @@ const GROUPS = [
     name: '站内搜索页',
     urls: [
       './sarach/感觉都不如原神.html', // 纯静态搜索页（常驻池）
+    ],
+  },
+  {
+    name: 'B站 Longking2012',
+    urls: [
+      'https://space.bilibili.com/325534942', // 部署者 Longking2012 的 B站主页（4★ UP 子池，提升被抽到概率）
     ],
   },
   {
