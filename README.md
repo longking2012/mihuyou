@@ -52,7 +52,7 @@
 
 往 `urls` 数组里加你想跳转的网址即可。
 
-> 注：根目录 `aha.js` 已把作者的 B站（`https://space.bilibili.com/325534942`）加入「3星狗粮」分组，并把搜索页路径从失效的 `./search.html` 修正为 `./sarach/感觉都不如原神.html`。
+> 注：根目录 `aha.js` 已把本人 B站（`https://space.bilibili.com/325534942`）加入「3星狗粮」分组，并把搜索页路径从失效的 `./search.html` 修正为 `./sarach/感觉都不如原神.html`。
 
 ## 本地预览
 
@@ -64,9 +64,10 @@
 2. 仓库 **Settings → Pages → Source** 选 `main` 分支、根目录 `/`
 3. 稍等片刻，Pages 地址即生效
 
-## 作者
+## 版权与所有权
 
-- B站：[@Longking2012](https://space.bilibili.com/325534942)
+- 本仓库内容抓取并反编译自 **米哈游.com**，原作者为米哈游.com；本人（Longking2012）并非原作者，仅作存档、学习与部署之用，**所有权归米哈游.com 所有**。
+- 本人 B站：[@Longking2012](https://space.bilibili.com/325534942)
 
 ## 说明
 
