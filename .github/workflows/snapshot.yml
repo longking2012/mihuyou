@@ -1,0 +1,78 @@
+# 每小时抓取 aha.js：全程在 GitHub 云端完成，本地不产生任何文件。
+# 逻辑：抓取线上 aha.js -> 与 baseline/aha.js（上次抓到的基准）对比
+#       有变化就把旧版归档到 old/ 文件夹，并更新基准与根目录 aha.js。
+# 归档目录结构：
+#   aha.js             当前线上版本（站点实际使用的脚本）
+#   baseline/aha.js    上一次抓取到的版本（用于对比，勿手动改）
+#   old/aha_时间戳.js   历史旧版存档
+name: 抓取 aha.js（每小时）
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # 每小时整点（UTC）
+  push:
+    paths:
+      - 'aha.js'          # aha.js 一有更新就立刻归档
+  workflow_dispatch:       # 支持在 Actions 页面手动触发
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aha-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 仓库
+        uses: actions/checkout@v4
+
+      - name: 抓取线上 aha.js 并归档旧版
+        env:
+          SOURCE_URL: https://raw.githubusercontent.com/longking2012/mihuyou/main/aha.js
+        run: |
+          set -euo pipefail
+
+          CURRENT="aha.js"
+          BASELINE="baseline/aha.js"
+          OLD_DIR="old"
+          mkdir -p "$OLD_DIR" "baseline"
+
+          TMP="$(mktemp)"
+          echo "抓取源: $SOURCE_URL"
+          curl -fsSL "$SOURCE_URL" -o "$TMP"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 首次运行：建立基准
+          if [ ! -f "$BASELINE" ]; then
+            cp "$TMP" "$BASELINE"
+            cp "$TMP" "$CURRENT"
+            git add "$CURRENT" "$BASELINE"
+            git commit -m "chore(snapshot): 首次抓取 aha.js 建立基准 [skip ci]"
+            git push
+            echo "首次抓取完成，基准已建立。"
+            exit 0
+          fi
+
+          BASE_HASH="$(sha256sum "$BASELINE" | awk '{print $1}')"
+          NEW_HASH="$(sha256sum "$TMP" | awk '{print $1}')"
+
+          if [ "$BASE_HASH" = "$NEW_HASH" ]; then
+            echo "线上 aha.js 无变化，跳过。"
+            exit 0
+          fi
+
+          TS="$(date -u +%Y%m%d_%H%M%S)"
+          ARCHIVE="$OLD_DIR/aha_$TS.js"
+          cp "$BASELINE" "$ARCHIVE"   # 旧版归档
+          cp "$TMP" "$BASELINE"       # 更新基准
+          cp "$TMP" "$CURRENT"        # 同步根目录脚本
+
+          git add "$CURRENT" "$BASELINE" "$ARCHIVE"
+          git commit -m "chore(snapshot): aha.js 更新，旧版归档为 $ARCHIVE [skip ci]"
+          git push
+          echo "已更新 aha.js，旧版归档到 $ARCHIVE。"
