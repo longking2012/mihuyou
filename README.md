@@ -64,6 +64,10 @@
 2. 仓库 **Settings → Pages → Source** 选 `main` 分支、根目录 `/`
 3. 稍等片刻，Pages 地址即生效
 
+## 作者
+
+- B站：[@Longking2012](https://space.bilibili.com/325534942)
+
 ## 说明
 
 - 本项目为个人整活 / 学习用途，跳转目标均为公开网站。
